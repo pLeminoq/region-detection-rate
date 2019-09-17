@@ -1,0 +1,3 @@
+../examples/from_datasets/ground_truth_gdxray.png    ../examples/from_datasets/prediction_gdxray.png
+../examples/from_datasets/ground_truth_wood.png      ../examples/from_datasets/prediction_wood.png 
+../examples/from_datasets/ground_truth_laundry.png   ../examples/from_datasets/prediction_laundry.png 

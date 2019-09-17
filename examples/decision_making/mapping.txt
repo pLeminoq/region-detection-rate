@@ -1,0 +1,1 @@
+../examples/decision_making/ground_truth.png    ../examples/decision_making/prediction.png

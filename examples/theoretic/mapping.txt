@@ -1,0 +1,3 @@
+../examples/theoretic/ground_truth.png    ../examples/theoretic/binary_map1.png
+../examples/theoretic/ground_truth.png    ../examples/theoretic/binary_map2.png
+../examples/theoretic/ground_truth.png    ../examples/theoretic/binary_map3.png
