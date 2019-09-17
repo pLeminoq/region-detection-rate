@@ -58,12 +58,14 @@ int main(int argc, char** argv) {
         cv::Mat binaryMap;
         cv::threshold(foregroundMap, binaryMap, vm["threshold"].as<int>(), 255, cv::THRESH_BINARY);
 
-        pixelwise += measure::pixelwise::Quantities(binaryMap, groundTruth);
+        measure::pixelwise::Quantities tmpPixelwiseQuantities(binaryMap, groundTruth);
+        pixelwise += tmpPixelwiseQuantities;
 
         std::vector<int>* detectedRegionLabels = new std::vector<int>();
         std::vector<int>* falsePredictionLabels = new std::vector<int>();
         measure::rdr::Stats st(binaryMap, groundTruth);
-        rdr += measure::rdr::Quantities(st, 0.5, 0.25, detectedRegionLabels, falsePredictionLabels);
+        measure::rdr::Quantities tmpRdrQuantities(st, 0.5, 0.25, detectedRegionLabels, falsePredictionLabels);
+        rdr += tmpRdrQuantities;
 
         if (!verbose) {
             continue;
@@ -109,6 +111,13 @@ int main(int argc, char** argv) {
         cv::namedWindow("False Predictions", cv::WINDOW_NORMAL);
         cv::resizeWindow("False Predictions", 1000, (groundTruth.rows * 1000 / groundTruth.cols));
 
+        printf("Precision: %.3f\n", measure::pixelwise::precision(tmpPixelwiseQuantities));
+        printf("Recall: %.3f\n", measure::pixelwise::recall(tmpPixelwiseQuantities));
+        printf("FBeta: %.3f\n", measure::pixelwise::fBeta(tmpPixelwiseQuantities));
+        printf("IoU: %.3f\n", measure::pixelwise::intersectionOverUnion(tmpPixelwiseQuantities));
+        printf("RDR: %.3f", measure::rdr::regionDetectionRate(tmpRdrQuantities));
+        std::cout << std::endl << std::endl;
+
         measure::rdr::util::CCStats groundTruthCCStats = measure::rdr::util::connectedComponents(groundTruth);
         measure::rdr::util::CCStats predictionCCStats = measure::rdr::util::connectedComponents(binaryMap);
         cv::Mat detectedRegionImage = cv::Mat::zeros(groundTruth.size(), CV_8UC3);
@@ -151,6 +160,7 @@ int main(int argc, char** argv) {
         }
     }
 
+    std::cout << "Overall:" << std::endl;
     printf("Precision: %.3f\n", measure::pixelwise::precision(pixelwise));
     printf("Recall: %.3f\n", measure::pixelwise::recall(pixelwise));
     printf("FBeta: %.3f\n", measure::pixelwise::fBeta(pixelwise));
